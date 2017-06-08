@@ -127,8 +127,34 @@ public class AirportMap extends PApplet {
 	public void draw() {
 		background(0);
 		map.draw();
-		
+		drawButtons();
 	}
 	
+	// helper method for drawing buttons on the map
+	private void drawButtons() {
+		
+		int xbase = 10;
+		int ybase = 10;
+		
+		// left button
+		fill(125, 181, 245);
+		noStroke();
+		rect(xbase, ybase, 100, 30, 7);
+		
+		textAlign(LEFT, CENTER);
+		textSize(10);
+		fill(70);
+		text("Show all airports", xbase+10, ybase+15);
+		
+		// right button
+		fill(125, 181, 245);
+		noStroke();
+		rect(xbase+110, ybase, 100, 30, 7);
+		
+		textAlign(LEFT, CENTER);
+		textSize(10);
+		fill(70);
+		text("Show all routes", xbase+125, ybase+15);
+	}
 
 }
