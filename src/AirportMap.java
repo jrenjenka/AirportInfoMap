@@ -49,21 +49,42 @@ public class AirportMap extends PApplet {
 		
 		List<Feature> cities = GeoJSONReader.loadData(this, cityFile);
 		
+		// load image for the marker
 		PImage icon = loadImage("icon.png");
 		
 		// create markers from features
 		for(PointFeature feature : features) {
 			AirportMarker m = new AirportMarker(feature, icon);
 			String airportCode = m.getProperty("code").toString();
+			String city = m.getProperty("city").toString();
 			
+			// https://stackoverflow.com/a/2608682
+			city = city.replaceAll("^\"|\"$", "");
+			
+			for (Feature c : cities) {
+				String name = c.getProperty("name").toString();
+				if(city.equals(name)) {
+					airportList.add(m);
+					
+					// put airport in hashmap with OpenFlights unique id for key
+					airports.put(Integer.parseInt(feature.getId()), feature.getLocation());
+				}
+			}
+			
+			/*
 			if(!airportCode.equals("\"\"")) 
 			{
 				m.setRadius(5);
 				airportList.add(m);
+				
+				// https://stackoverflow.com/a/2608682
+				airportCode = airportCode.replaceAll("^\"|\"$", "");
+				
 			
 				// put airport in hashmap with OpenFlights unique id for key
 				airports.put(Integer.parseInt(feature.getId()), feature.getLocation());
 			}
+			*/
 			
 		
 		}
