@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.fhpotsdam.unfolding.UnfoldingMap;
+import de.fhpotsdam.unfolding.data.Feature;
+import de.fhpotsdam.unfolding.data.GeoJSONReader;
 import de.fhpotsdam.unfolding.data.PointFeature;
 import de.fhpotsdam.unfolding.data.ShapeFeature;
 import de.fhpotsdam.unfolding.marker.Marker;
@@ -14,6 +16,7 @@ import de.fhpotsdam.unfolding.utils.MapUtils;
 import de.fhpotsdam.unfolding.geo.Location;
 import parsing.ParseFeed;
 import processing.core.PApplet;
+import processing.core.PImage;
 
 /** An applet that shows airports (and routes)
  * on a world map.  
@@ -27,12 +30,14 @@ public class AirportMap extends PApplet {
 	private List<Marker> airportList;
 	List<Marker> routeList;
 	
+	private String cityFile = "city-data.json";
+	
 	public void setup() {
 		// setting up PAppler
-		size(800,600, OPENGL);
+		size(900, 700, OPENGL);
 		
 		// setting up map and default events
-		map = new UnfoldingMap(this, 50, 50, 750, 550);
+		map = new UnfoldingMap(this, 0, 0, 900, 900);
 		MapUtils.createDefaultEventDispatcher(this, map);
 		
 		// get features from airport data
@@ -42,18 +47,26 @@ public class AirportMap extends PApplet {
 		airportList = new ArrayList<Marker>();
 		HashMap<Integer, Location> airports = new HashMap<Integer, Location>();
 		
+		List<Feature> cities = GeoJSONReader.loadData(this, cityFile);
+		
+		PImage icon = loadImage("icon.png");
+		
 		// create markers from features
 		for(PointFeature feature : features) {
-			AirportMarker m = new AirportMarker(feature);
-	
-			m.setRadius(5);
-			airportList.add(m);
+			AirportMarker m = new AirportMarker(feature, icon);
+			String airportCode = m.getProperty("code").toString();
 			
-			// put airport in hashmap with OpenFlights unique id for key
-			airports.put(Integer.parseInt(feature.getId()), feature.getLocation());
+			if(!airportCode.equals("\"\"")) 
+			{
+				m.setRadius(5);
+				airportList.add(m);
+			
+				// put airport in hashmap with OpenFlights unique id for key
+				airports.put(Integer.parseInt(feature.getId()), feature.getLocation());
+			}
+			
 		
 		}
-		
 		
 		// parse route data
 		List<ShapeFeature> routes = ParseFeed.parseRoutes(this, "routes.dat");
@@ -72,7 +85,7 @@ public class AirportMap extends PApplet {
 			
 			SimpleLinesMarker sl = new SimpleLinesMarker(route.getLocations(), route.getProperties());
 		
-			System.out.println(sl.getProperties());
+			//System.out.println(sl.getProperties());
 			
 			//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
 			//routeList.add(sl);
