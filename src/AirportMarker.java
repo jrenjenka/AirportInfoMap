@@ -13,9 +13,10 @@ import processing.core.PImage;
  *   
  * @author Adam Setters and the UC San Diego Intermediate Software Development
  * MOOC team
- *
- * icon - made by http://www.freepik.com loaded from http://www.flaticon.com
- * Icon made by http://www.flaticon.com/authors/pixel-buddha
+ * 
+ * @author Liubov Sereda
+ * Date June 08, 2017
+ * 
  */
 public class AirportMarker extends CommonMarker {
 	public static List<SimpleLinesMarker> routes;

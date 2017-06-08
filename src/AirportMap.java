@@ -22,7 +22,9 @@ import processing.core.PImage;
  * on a world map.  
  * @author Adam Setters and the UC San Diego Intermediate Software Development
  * MOOC team
- *
+ * @author Liubov Sereda
+ * Date June 08, 2017
+ * 
  */
 public class AirportMap extends PApplet {
 	
@@ -50,6 +52,7 @@ public class AirportMap extends PApplet {
 		List<Feature> cities = GeoJSONReader.loadData(this, cityFile);
 		
 		// load image for the marker
+		// Icon credit: made by http://www.freepik.com loaded from http://www.flaticon.com
 		PImage icon = loadImage("icon.png");
 		
 		// create markers from features
