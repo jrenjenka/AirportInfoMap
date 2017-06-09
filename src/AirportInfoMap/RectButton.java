@@ -11,6 +11,7 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 
+
 public class RectButton {
 	 PApplet parent;
 	 PGraphics pg;
@@ -20,7 +21,6 @@ public class RectButton {
 	 int width, height, radius;
 	 int basecolor;
 	 int currentcolor, highlightcolor;
-	 int r, g, b;
 	 
 	 // Label properties
 	 String label;
@@ -35,21 +35,18 @@ public class RectButton {
 	    }
 	 
 	 public void setCoordinates(int x, int y) {
-		 this.xbase = x;
-	     this.ybase = y;
+		 xbase = x;
+	     ybase = y;
 	 }
 	 
 	 public void setSize(int w, int h, int r) {
-		 this.width = w;
-	     this.height = h;
-	     this.radius = r;
+		 width = w;
+	     height = h;
+	     radius = r;
 	 }
 	 
-	 public void setBaseColor(int r, int g, int b) {
-	        //this.basecolor = pg.color(r, g, b);
-		 //this.r = r;
-		 //this.g = g;
-		 //this.b = b;
+	 public void setBaseColor(int color) {
+		 basecolor = color;
 	 }
 	 
 	 public void setLabel(String t, int ts, int tc) {
@@ -61,8 +58,18 @@ public class RectButton {
 	 public void display()
 	    {
 	        pg.beginDraw();
-	        pg.fill(r, g, b);
+	     
+	        // draw button
+	        pg.fill(basecolor);
+	        pg.noStroke();
 	        pg.rect(xbase, ybase, width, height, radius);
+	        
+	        // add label
+	        pg.textAlign(PConstants.CENTER, PConstants.CENTER);
+			pg.textSize(fontSize);
+			pg.fill(fontColor);
+			pg.text(label, xbase+width/2, ybase+height/2);
+	        
 	        pg.endDraw();
 	        parent.image(pg, 0, 0); 
 	    }

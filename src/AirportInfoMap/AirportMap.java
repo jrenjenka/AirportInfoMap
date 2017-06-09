@@ -35,16 +35,14 @@ public class AirportMap extends PApplet {
 	List<Marker> routeList;
 	private String cityFile = "city-data.json";
 	PGraphics pg;
-	RectButton button;
+	RectButton airportsButton;
+	RectButton routesButton;
 	
 	public void setup() {
 		// setting up PAppler
 		size(900, 700, OPENGL);
 		
-		button = new RectButton(this, 100, 40);
-		button.setCoordinates(10, 10);
-		button.setSize(90, 30, 7);
-		button.setBaseColor(100, 20, 30);
+		
 		
 		// setting up map and default events
 		map = new UnfoldingMap(this, 0, 0, 900, 900);
@@ -124,11 +122,13 @@ public class AirportMap extends PApplet {
 		}
 		
 		
-		
 		//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
 		//map.addMarkers(routeList);
 		
 		map.addMarkers(airportList);
+		
+		// Setup buttons
+		setupButtons();
 		
 	}
 	
@@ -136,44 +136,27 @@ public class AirportMap extends PApplet {
 
 		background(0);
 		map.draw();
-		button.display();
-		//drawButtons();
-		
+		airportsButton.display();
+		routesButton.display();
 		
 	}
 	
-	// helper method for drawing buttons on the map
-	private void drawButtons() {
+	// helper method for buttons setup
+	private void setupButtons() {
+		int color = color(125, 181, 245);
 		
-		int xbase = 10;
-		int ybase = 10;
+		airportsButton = new RectButton(this, 400, 40);
+		airportsButton.setCoordinates(10, 10);
+		airportsButton.setSize(100, 30, 7);
+		airportsButton.setBaseColor(color);
+		airportsButton.setLabel("Show all airports", 10, 70);
+			
+		routesButton = new RectButton(this, 400, 40);
+		routesButton.setCoordinates(120, 10);
+		routesButton.setSize(100, 30, 7);
+		routesButton.setBaseColor(color);
+		routesButton.setLabel("Show all routes", 10, 70);
 		
-		// left button
-		fill(125, 181, 245);
-		noStroke();
-		rect(xbase, ybase, 100, 30, 7);
-		
-		textAlign(CENTER, CENTER);
-		textSize(10);
-		fill(70);
-		text("Show all airports", xbase+100/2, ybase+30/2);
-		
-		// right button
-		fill(125, 181, 245);
-		noStroke();
-		rect(xbase+110, ybase, 100, 30, 7);
-		
-		textAlign(LEFT, CENTER);
-		textSize(10);
-		fill(70);
-		text("Show all routes", xbase+125, ybase+15);
-	}
-	
-	// helper method for buttons animation
-	public void mouseClicked() {
-		if (mouseX > 10 && mouseX < 100 && mouseY > 10 && mouseY > 20) {
-			fill(0);
-		}
 	}
 
 }
