@@ -1,4 +1,4 @@
-package AirportInfoMap;
+package airportInfoMap;
 
 
 import java.util.ArrayList;
@@ -41,7 +41,11 @@ public class AirportMap extends PApplet {
 		// setting up PAppler
 		size(900, 700, OPENGL);
 		
-		button = new RectButton(this, 100, 100);
+		button = new RectButton(this, 100, 40);
+		button.setCoordinates(10, 10);
+		button.setSize(90, 30, 7);
+		button.setBaseColor(100, 20, 30);
+		
 		// setting up map and default events
 		map = new UnfoldingMap(this, 0, 0, 900, 900);
 		MapUtils.createDefaultEventDispatcher(this, map);

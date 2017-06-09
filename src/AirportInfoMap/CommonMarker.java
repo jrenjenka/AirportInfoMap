@@ -1,4 +1,4 @@
-package AirportInfoMap;
+package airportInfoMap;
 
 
 
