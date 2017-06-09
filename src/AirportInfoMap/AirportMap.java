@@ -1,3 +1,4 @@
+package AirportInfoMap;
 
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import de.fhpotsdam.unfolding.utils.MapUtils;
 import de.fhpotsdam.unfolding.geo.Location;
 import parsing.ParseFeed;
 import processing.core.PApplet;
+import processing.core.PGraphics;
 import processing.core.PImage;
 
 /** An applet that shows airports (and routes)
@@ -31,13 +33,15 @@ public class AirportMap extends PApplet {
 	UnfoldingMap map;
 	private List<Marker> airportList;
 	List<Marker> routeList;
-	
 	private String cityFile = "city-data.json";
+	PGraphics pg;
+	RectButton button;
 	
 	public void setup() {
 		// setting up PAppler
 		size(900, 700, OPENGL);
 		
+		button = new RectButton(this, 100, 100);
 		// setting up map and default events
 		map = new UnfoldingMap(this, 0, 0, 900, 900);
 		MapUtils.createDefaultEventDispatcher(this, map);
@@ -125,9 +129,13 @@ public class AirportMap extends PApplet {
 	}
 	
 	public void draw() {
+
 		background(0);
 		map.draw();
-		drawButtons();
+		button.display();
+		//drawButtons();
+		
+		
 	}
 	
 	// helper method for drawing buttons on the map
@@ -141,10 +149,10 @@ public class AirportMap extends PApplet {
 		noStroke();
 		rect(xbase, ybase, 100, 30, 7);
 		
-		textAlign(LEFT, CENTER);
+		textAlign(CENTER, CENTER);
 		textSize(10);
 		fill(70);
-		text("Show all airports", xbase+10, ybase+15);
+		text("Show all airports", xbase+100/2, ybase+30/2);
 		
 		// right button
 		fill(125, 181, 245);
@@ -155,6 +163,13 @@ public class AirportMap extends PApplet {
 		textSize(10);
 		fill(70);
 		text("Show all routes", xbase+125, ybase+15);
+	}
+	
+	// helper method for buttons animation
+	public void mouseClicked() {
+		if (mouseX > 10 && mouseX < 100 && mouseY > 10 && mouseY > 20) {
+			fill(0);
+		}
 	}
 
 }
