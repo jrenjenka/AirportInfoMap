@@ -17,23 +17,27 @@ public class RectButton {
 	 PGraphics pg;
 	 
 	 // Button properties
-	 int xbase, ybase;
-	 int width, height, radius;
-	 int basecolor;
-	 int currentcolor, highlightcolor;
+	 private int xbase, ybase;
+	 private int width, height, radius;
+	 private int basecolor, highlightcolor;
+	 private int currentcolor;
 	 
 	 // Label properties
-	 String label;
-	 int fontSize;
-	 int fontColor;
+	 private String label;
+	 private int fontSize;
+	 private int fontColor;
 	 
-	 
+	 // Button behaviour
+	 private boolean pressed = false; 
+	
+	 // constructor
 	 public RectButton(PApplet p, int _w, int _h)
 	    {
 	        parent = p;
 	        pg = parent.createGraphics(_w, _h, PConstants.P3D);
 	    }
 	 
+	 // setters 
 	 public void setCoordinates(int x, int y) {
 		 xbase = x;
 	     ybase = y;
@@ -45,8 +49,13 @@ public class RectButton {
 	     radius = r;
 	 }
 	 
-	 public void setBaseColor(int color) {
-		 basecolor = color;
+	 public void setBaseColor(int bcolor) {
+		 basecolor = bcolor;
+		 currentcolor = basecolor;
+	 }
+	 
+	 public void setHighlightColor(int hcolor) {
+		 highlightcolor = hcolor;
 	 }
 	 
 	 public void setLabel(String t, int ts, int tc) {
@@ -55,12 +64,22 @@ public class RectButton {
 	     this.fontColor = tc;
 	 }
 	 
+	 // Setter and getter for button interactivity
+	 public void setButtonPressed(boolean state) {
+		 pressed = state;
+	 }
+	 
+	 public boolean getButtonPressed() {
+		 return pressed;
+	 }
+	 
+	 // draw button
 	 public void display()
 	    {
 	        pg.beginDraw();
 	     
 	        // draw button
-	        pg.fill(basecolor);
+	        pg.fill(currentcolor);
 	        pg.noStroke();
 	        pg.rect(xbase, ybase, width, height, radius);
 	        
@@ -72,5 +91,18 @@ public class RectButton {
 	        
 	        pg.endDraw();
 	        parent.image(pg, 0, 0); 
+	      
+	        pressedButton();
 	    }
+	 
+	 // interactive button behaviour
+	 public void pressedButton() {
+		 if (pressed) { 
+			 pg.stroke(highlightcolor);
+			 currentcolor = basecolor;
+		} else { 
+			pg.noStroke(); 
+			currentcolor = highlightcolor;
+		}
+	 }
 }

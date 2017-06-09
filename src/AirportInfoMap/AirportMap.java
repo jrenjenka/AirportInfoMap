@@ -43,7 +43,6 @@ public class AirportMap extends PApplet {
 		size(900, 700, OPENGL);
 		
 		
-		
 		// setting up map and default events
 		map = new UnfoldingMap(this, 0, 0, 900, 900);
 		MapUtils.createDefaultEventDispatcher(this, map);
@@ -141,20 +140,47 @@ public class AirportMap extends PApplet {
 		
 	}
 	
+	@Override
+	public void mouseMoved() {
+		
+	}
+	
+	@Override
+	public void mouseClicked() {
+		if (mouseX > 10 && mouseX < 110 && mouseY > 10 && mouseY < 30) {
+			if (airportsButton.getButtonPressed()) { 
+				airportsButton.setButtonPressed(false);
+			} else {
+			airportsButton.setButtonPressed(true);
+			}
+		}
+		
+		if (mouseX > 120 && mouseX < 220 && mouseY > 10 && mouseY < 30) {
+			if (routesButton.getButtonPressed()) {
+				routesButton.setButtonPressed(false);
+			} else {
+			routesButton.setButtonPressed(true);
+			}
+		}
+	}
+	
 	// helper method for buttons setup
 	private void setupButtons() {
-		int color = color(125, 181, 245);
+		int hcolor = color(134, 187, 247);
+		int bcolor = color(71, 145, 229);
 		
 		airportsButton = new RectButton(this, 400, 40);
 		airportsButton.setCoordinates(10, 10);
 		airportsButton.setSize(100, 30, 7);
-		airportsButton.setBaseColor(color);
+		airportsButton.setBaseColor(bcolor);
+		airportsButton.setHighlightColor(hcolor);
 		airportsButton.setLabel("Show all airports", 10, 70);
 			
 		routesButton = new RectButton(this, 400, 40);
 		routesButton.setCoordinates(120, 10);
 		routesButton.setSize(100, 30, 7);
-		routesButton.setBaseColor(color);
+		routesButton.setBaseColor(bcolor);
+		routesButton.setHighlightColor(hcolor);
 		routesButton.setLabel("Show all routes", 10, 70);
 		
 	}
