@@ -19,8 +19,8 @@ public class RectButton {
 	 // Button properties
 	 private int xbase, ybase;
 	 private int width, height, radius;
-	 private int basecolor, highlightcolor;
-	 private int currentcolor;
+	 private int baseColor, highlightColor;
+	 private int currentColor, selectedColor;
 	 
 	 // Label properties
 	 private String label;
@@ -29,6 +29,7 @@ public class RectButton {
 	 
 	 // Button behaviour
 	 private boolean pressed = false; 
+	 private boolean over = false;
 	
 	 // constructor
 	 public RectButton(PApplet p, int _w, int _h)
@@ -50,12 +51,16 @@ public class RectButton {
 	 }
 	 
 	 public void setBaseColor(int bcolor) {
-		 basecolor = bcolor;
-		 currentcolor = basecolor;
+		 baseColor = bcolor;
+		 currentColor = baseColor;
 	 }
 	 
 	 public void setHighlightColor(int hcolor) {
-		 highlightcolor = hcolor;
+		 highlightColor = hcolor;
+	 }
+	 
+	 public void setSelectedColor(int scolor) {
+		 selectedColor = scolor;
 	 }
 	 
 	 public void setLabel(String t, int ts, int tc) {
@@ -64,7 +69,7 @@ public class RectButton {
 	     this.fontColor = tc;
 	 }
 	 
-	 // Setter and getter for button interactivity
+	 // Setters and getters for button interactivity
 	 public void setButtonPressed(boolean state) {
 		 pressed = state;
 	 }
@@ -73,13 +78,21 @@ public class RectButton {
 		 return pressed;
 	 }
 	 
+	 public void setOverButton(boolean state) {
+		 over = state;
+	 }
+	 
+	 public boolean getOverButton() {
+		 return over;
+	 }
+	 
 	 // draw button
 	 public void display()
 	    {
 	        pg.beginDraw();
 	     
 	        // draw button
-	        pg.fill(currentcolor);
+	        pg.fill(currentColor);
 	        pg.noStroke();
 	        pg.rect(xbase, ybase, width, height, radius);
 	        
@@ -93,16 +106,28 @@ public class RectButton {
 	        parent.image(pg, 0, 0); 
 	      
 	        pressedButton();
+	        overButton();
 	    }
 	 
 	 // interactive button behaviour
 	 public void pressedButton() {
 		 if (pressed) { 
-			 pg.stroke(highlightcolor);
-			 currentcolor = basecolor;
+			 currentColor = baseColor;
 		} else { 
-			pg.noStroke(); 
-			currentcolor = highlightcolor;
+			currentColor = selectedColor;
 		}
+	 }
+	 
+	 public void overButton() {
+		 if (over) {
+			 currentColor = highlightColor; 
+		 } else {
+			
+			 if (pressed) {
+				 currentColor = baseColor;
+			 } else {
+				 currentColor = selectedColor;
+			 }
+		 }
 	 }
 }

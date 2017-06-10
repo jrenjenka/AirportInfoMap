@@ -129,7 +129,20 @@ public class AirportMap extends PApplet {
 	
 	@Override
 	public void mouseMoved() {
+		if (mouseX > 10 && mouseX < 110 && mouseY > 10 && mouseY < 30) {
+			airportsButton.setOverButton(true);
+			
+		} else {
+			airportsButton.setOverButton(false);
 		
+		}
+		
+		System.out.println(routesButton.getOverButton());
+		if (mouseX > 120 && mouseX < 220 && mouseY > 10 && mouseY < 30) {
+			routesButton.setOverButton(true);
+		} else {
+			routesButton.setOverButton(false);
+		}
 	}
 	
 	@Override
@@ -153,13 +166,15 @@ public class AirportMap extends PApplet {
 	
 	// helper method for buttons setup
 	private void setupButtons() {
-		int hcolor = color(134, 187, 247);
 		int bcolor = color(71, 145, 229);
+		int scolor = color(134, 187, 247);
+		int hcolor = color(233, 236, 237);
 		
 		airportsButton = new RectButton(this, 400, 40);
 		airportsButton.setCoordinates(10, 10);
 		airportsButton.setSize(100, 30, 7);
 		airportsButton.setBaseColor(bcolor);
+		airportsButton.setSelectedColor(scolor);
 		airportsButton.setHighlightColor(hcolor);
 		airportsButton.setLabel("Show all airports", 10, 70);
 			
@@ -167,6 +182,7 @@ public class AirportMap extends PApplet {
 		routesButton.setCoordinates(120, 10);
 		routesButton.setSize(100, 30, 7);
 		routesButton.setBaseColor(bcolor);
+		routesButton.setSelectedColor(scolor);
 		routesButton.setHighlightColor(hcolor);
 		routesButton.setLabel("Show all routes", 10, 70);
 		
