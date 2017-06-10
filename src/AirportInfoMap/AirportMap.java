@@ -94,7 +94,7 @@ public class AirportMap extends PApplet {
 				route.addLocation(airports.get(dest));
 			}
 			
-			RouteMarker rt = new RouteMarker(route);
+			SimpleLinesMarker rt = new SimpleLinesMarker(((ShapeFeature)route).getLocations(), route.getProperties());
 			
 			rt.setHidden(true);
 			//System.out.println(rt.getProperties());
@@ -108,7 +108,7 @@ public class AirportMap extends PApplet {
 		//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
 		//map.addMarkers(routeList);
 		
-		//map.addMarkers(airportMarkers);
+		map.addMarkers(airportMarkers);
 		map.addMarkers(routeMarkers);
 		
 		// Setup buttons
