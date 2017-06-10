@@ -16,18 +16,18 @@ public class RectButton {
 	 PApplet parent;
 	 PGraphics pg;
 	 
-	 // Button properties
+	 // button properties
 	 private int xbase, ybase;
 	 private int width, height, radius;
 	 private int baseColor, highlightColor;
 	 private int currentColor, selectedColor;
 	 
-	 // Label properties
+	 // label properties
 	 private String label;
 	 private int fontSize;
 	 private int fontColor;
 	 
-	 // Button behaviour
+	 // button behaviour
 	 private boolean pressed = false; 
 	 private boolean over = false;
 	
@@ -87,35 +87,35 @@ public class RectButton {
 	 }
 	 
 	 // draw button
-	 public void display()
-	    {
-	        pg.beginDraw();
-	     
-	        // draw button
-	        pg.fill(currentColor);
-	        pg.noStroke();
-	        pg.rect(xbase, ybase, width, height, radius);
+	 public void display() {
+		pg.beginDraw();
+		 
+		// draw button
+	    pg.fill(currentColor);
+	    pg.noStroke();
+	    pg.rect(xbase, ybase, width, height, radius);
 	        
-	        // add label
-	        pg.textAlign(PConstants.CENTER, PConstants.CENTER);
-			pg.textSize(fontSize);
-			pg.fill(fontColor);
-			pg.text(label, xbase+width/2, ybase+height/2);
+	    // add label
+	    pg.textAlign(PConstants.CENTER, PConstants.CENTER);
+	    pg.textSize(fontSize);
+	    pg.fill(fontColor);
+		pg.text(label, xbase+width/2, ybase+height/2);
 	        
-	        pg.endDraw();
-	        parent.image(pg, 0, 0); 
+	    pg.endDraw();
+	    parent.image(pg, 0, 0); 
 	      
-	        pressedButton();
-	        overButton();
-	    }
+	    pressedButton();
+	    overButton();
+	    
+	 }
 	 
-	 // Change button color if pressed
+	 // change button color if pressed
 	 public void pressedButton() {
 		if (pressed) { currentColor = baseColor; } 
 		else { currentColor = selectedColor; }
 	 }
 	 
-	 // Change button color if over
+	 // change button color if over
 	 public void overButton() {
 		 if (over && !pressed) { currentColor = highlightColor; } 
 		 else {

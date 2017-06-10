@@ -49,7 +49,6 @@ public class AirportMap extends PApplet {
 		// setting up PAppler
 		size(900, 700, OPENGL);
 		
-		
 		// setting up map and default events
 		map = new UnfoldingMap(this, 0, 0, 900, 900);
 		MapUtils.createDefaultEventDispatcher(this, map);
@@ -62,12 +61,12 @@ public class AirportMap extends PApplet {
 		airports = new HashMap<Integer, Location>();
 		
 		// load image for the marker
-		// Icon credit: made by http://www.freepik.com loaded from http://www.flaticon.com
+		// icon credit: made by http://www.freepik.com loaded from http://www.flaticon.com
 		PImage icon = loadImage("icon.png");
 		
 		cities = GeoJSONReader.loadData(this, cityFile);
 		
-		// create markers from features
+		// create airport markers from features
 		for(PointFeature feature : features) {
 			AirportMarker m = new AirportMarker(feature, icon);
 		
@@ -78,19 +77,18 @@ public class AirportMap extends PApplet {
 				// show marker only if it is nearby big city
 				checkCities(m);
 				airportMarkers.add(m);
-				//System.out.println(m.getProperties());
-			//	System.out.println(m.getLocation());
+				
 			}
 		
 			// put airport in hashmap with OpenFlights unique id for key
 			airports.put(Integer.parseInt(feature.getId()), feature.getLocation());
-			//System.out.println(feature.getId());
-			//System.out.println(feature.getLocation());
 		}
 		 
 		// parse route data
 		List<ShapeFeature> routes = ParseFeed.parseRoutes(this, "routes.dat");
 		routeMarkers = new ArrayList<Marker>();
+		
+		// create markers for routes
 		for(ShapeFeature route : routes) {
 			
 			// get source and destination airportIds
@@ -106,24 +104,15 @@ public class AirportMap extends PApplet {
 			SimpleLinesMarker rt = new SimpleLinesMarker(((ShapeFeature)route).getLocations(), route.getProperties());
 			
 			rt.setHidden(true);
-			//System.out.println(rt.getProperties());
-			//System.out.println(rt.getLocations());
-			
-			//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
 			routeMarkers.add(rt);
 		}
 		
-		
-		
-		//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
-		//map.addMarkers(routeList);
-		
+		// add markers on map
 		map.addMarkers(airportMarkers);
 		map.addMarkers(routeMarkers);
 		
-		// Setup buttons
+		// setup buttons
 		setupButtons();
-		
 	}
 	
 	public void draw() {
@@ -138,7 +127,7 @@ public class AirportMap extends PApplet {
 	@Override
 	public void mouseMoved() {
 		
-		// highlight button if over
+		// highlight buttons if over
 		if (mouseX > 10 && mouseX < 110 && mouseY > 10 && mouseY < 30) {
 			airportsButton.setOverButton(true);
 		} else {
@@ -157,7 +146,6 @@ public class AirportMap extends PApplet {
 		
 		// highlight buttons if pressed
 		if (mouseX > 10 && mouseX < 110 && mouseY > 10 && mouseY < 30) {
-			
 			if (airportsButton.getButtonPressed()) { 
 				hideAllAirports();
 				airportsButton.setButtonPressed(false);
@@ -177,12 +165,13 @@ public class AirportMap extends PApplet {
 			}
 		}
 		
+		// show routes if marker is selected
 		if (lastSelected != null) {
 			lastSelected.setSelected(false);
 			lastSelected = null;
-		}
+			hideAllRoutes();
+		} 
 		selectMarkerIfClicked();
-		
 	}
 	
 	// helper method for selecting marker if airport marker is clicked
@@ -199,43 +188,13 @@ public class AirportMap extends PApplet {
 	
 	// helper method for showing routes if airport marker is clicked
 	private void showRoutes(Marker m) {
-		System.out.println("Start searching routes");
 		for (Marker route : routeMarkers) {
-			//System.out.println("Checking routes");
-			//System.out.println(m.getLocation());
 			int source = Integer.parseInt(route.getProperty("source").toString());
-			//System.out.println(airports.get(source));
 			if (m.getLocation().equals(airports.get(source))) {
-				System.out.println("Route found");
 				route.setHidden(false);
+				checkAirports(route);
 			}
 		}
-		
-	}
-	
-	
-	
-	// helper method for buttons setup
-	private void setupButtons() {
-		int bcolor = color(71, 145, 229);
-		int scolor = color(134, 187, 247);
-		int hcolor = color(111, 153, 167);
-		
-		airportsButton = new RectButton(this, 400, 40);
-		airportsButton.setCoordinates(10, 10);
-		airportsButton.setSize(100, 30, 7);
-		airportsButton.setBaseColor(bcolor);
-		airportsButton.setSelectedColor(scolor);
-		airportsButton.setHighlightColor(hcolor);
-		airportsButton.setLabel("Show all airports", 10, 70);
-			
-		routesButton = new RectButton(this, 400, 40);
-		routesButton.setCoordinates(120, 10);
-		routesButton.setSize(100, 30, 7);
-		routesButton.setBaseColor(bcolor);
-		routesButton.setSelectedColor(scolor);
-		routesButton.setHighlightColor(hcolor);
-		routesButton.setLabel("Show all routes", 10, 70);
 		
 	}
 	
@@ -275,7 +234,7 @@ public class AirportMap extends PApplet {
 		
 		String city = m.getProperty("city").toString();
 		
-		// https://stackoverflow.com/a/2608682
+		// Regular expression is taken from  https://stackoverflow.com/a/2608682
 		city = city.replaceAll("^\"|\"$", "");
 		for (Feature c : cities) {
 			String name = c.getProperty("name").toString();
@@ -284,5 +243,38 @@ public class AirportMap extends PApplet {
 		} 
 		
 	}
-
+	
+	// helper method for showing destination airports if marker is clicked
+	private void checkAirports(Marker rt) {
+		for (Marker m : airportMarkers) {
+			int dest = Integer.parseInt(rt.getProperty("destination").toString());
+			if (m.getLocation().equals(airports.get(dest)) && m.isHidden()) {
+				m.setHidden(false);
+			} 
+		}
+	}
+	
+	// helper method for buttons setup
+	private void setupButtons() {
+		int bcolor = color(71, 145, 229);
+		int scolor = color(134, 187, 247);
+		int hcolor = color(111, 153, 167);
+			
+		airportsButton = new RectButton(this, 400, 40);
+		airportsButton.setCoordinates(10, 10);
+		airportsButton.setSize(100, 30, 7);
+		airportsButton.setBaseColor(bcolor);
+		airportsButton.setSelectedColor(scolor);
+		airportsButton.setHighlightColor(hcolor);
+		airportsButton.setLabel("Show all airports", 10, 70);
+				
+		routesButton = new RectButton(this, 400, 40);
+		routesButton.setCoordinates(120, 10);
+		routesButton.setSize(100, 30, 7);
+		routesButton.setBaseColor(bcolor);
+		routesButton.setSelectedColor(scolor);
+		routesButton.setHighlightColor(hcolor);
+		routesButton.setLabel("Show all routes", 10, 70);
+			
+	}
 }

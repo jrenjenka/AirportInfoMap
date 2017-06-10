@@ -1,11 +1,7 @@
 package airportInfoMap;
 
-
-import java.util.List;
-
 import de.fhpotsdam.unfolding.data.Feature;
 import de.fhpotsdam.unfolding.data.PointFeature;
-import de.fhpotsdam.unfolding.marker.SimpleLinesMarker;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
@@ -21,28 +17,32 @@ import processing.core.PImage;
  * 
  */
 public class AirportMarker extends CommonMarker {
-	public static List<SimpleLinesMarker> routes;
 	PImage icon;
 	
 	int width;
 	int height;
 
 	public AirportMarker(Feature city, PImage icon) {
+		
 		super(((PointFeature)city).getLocation(), city.getProperties());
 		this.icon = icon;
+		
 	}
 	
 	@Override
 	public void drawMarker(PGraphics pg, float x, float y) {
+		
 		pg.pushStyle();
 		pg.imageMode(PConstants.CENTER);
 		pg.image(icon, x, y);
 		pg.popStyle();
+		
 	}
 
 	@Override
 	public void showTitle(PGraphics pg, float x, float y) {
-		 // show rectangle with title
+		
+		// show rectangle with title
 		String title = getName() + ", " + getCode() + "\n" + getCity() + ", " + getCountry();
 		
 		width = (int) pg.textWidth(title) + 10;
@@ -58,9 +58,7 @@ public class AirportMarker extends CommonMarker {
 		pg.fill(0);
 		pg.text(title, x, y - height/2 - 10);
 		
-		pg.popStyle();
-		// show routes
-		
+		pg.popStyle();		
 		
 	}
 	
