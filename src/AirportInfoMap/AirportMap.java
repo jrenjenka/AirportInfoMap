@@ -31,11 +31,14 @@ import processing.core.PImage;
 public class AirportMap extends PApplet {
 	
 	UnfoldingMap map;
+	
 	private List<Marker> airportMarkers;
-	List<Marker> routeList;
+	PGraphics pg;
+	List<Marker> routeMarkers;
+	
 	private String cityFile = "city-data.json";
 	List<Feature> cities;
-	PGraphics pg;
+	
 	RectButton airportsButton;
 	RectButton routesButton;
 	
@@ -55,11 +58,11 @@ public class AirportMap extends PApplet {
 		airportMarkers = new ArrayList<Marker>();
 		HashMap<Integer, Location> airports = new HashMap<Integer, Location>();
 		
-		cities = GeoJSONReader.loadData(this, cityFile);
-		
 		// load image for the marker
 		// Icon credit: made by http://www.freepik.com loaded from http://www.flaticon.com
 		PImage icon = loadImage("icon.png");
+		
+		cities = GeoJSONReader.loadData(this, cityFile);
 		
 		// create markers from features
 		for(PointFeature feature : features) {
@@ -78,7 +81,7 @@ public class AirportMap extends PApplet {
 		
 		// parse route data
 		List<ShapeFeature> routes = ParseFeed.parseRoutes(this, "routes.dat");
-		routeList = new ArrayList<Marker>();
+		routeMarkers = new ArrayList<Marker>();
 		for(ShapeFeature route : routes) {
 			
 			// get source and destination airportIds
@@ -91,19 +94,22 @@ public class AirportMap extends PApplet {
 				route.addLocation(airports.get(dest));
 			}
 			
-			SimpleLinesMarker sl = new SimpleLinesMarker(route.getLocations(), route.getProperties());
-		
-			//System.out.println(sl.getProperties());
+			RouteMarker rt = new RouteMarker(route);
+			
+			rt.setHidden(true);
+			//System.out.println(rt.getProperties());
+			//System.out.println(rt.getLocations());
 			
 			//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
-			//routeList.add(sl);
+			routeMarkers.add(rt);
 		}
 		
 		
 		//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
 		//map.addMarkers(routeList);
 		
-		map.addMarkers(airportMarkers);
+		//map.addMarkers(airportMarkers);
+		map.addMarkers(routeMarkers);
 		
 		// Setup buttons
 		setupButtons();
@@ -147,16 +153,18 @@ public class AirportMap extends PApplet {
 				hideAllAirports();
 				airportsButton.setButtonPressed(false);
 			} else {
-			showAllAirports();
-			airportsButton.setButtonPressed(true);
+				showAllAirports();
+				airportsButton.setButtonPressed(true);
 			}
 		}
 		
 		if (mouseX > 120 && mouseX < 220 && mouseY > 10 && mouseY < 30) {
 			if (routesButton.getButtonPressed()) {
+				hideAllRoutes();
 				routesButton.setButtonPressed(false);
 			} else {
-			routesButton.setButtonPressed(true);
+				showAllRoutes();
+				routesButton.setButtonPressed(true);
 			}
 		}
 		
@@ -202,6 +210,21 @@ public class AirportMap extends PApplet {
 		}
 	}
 	
+	// helper method for showing all routes if the button is clicked
+	private void showAllRoutes() {
+		for (Marker m : routeMarkers) {
+			m.setHidden(false);
+		}
+	}
+	
+	// helper method for hiding all routes if the button is clicked
+	private void hideAllRoutes() {
+		for (Marker m : routeMarkers) {
+			m.setHidden(true);
+		}
+	}
+	
+	// helper method for checking if airport is nearby big city
 	private void checkCities(Marker m) {
 		m.setHidden(true);
 		
