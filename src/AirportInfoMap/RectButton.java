@@ -109,25 +109,19 @@ public class RectButton {
 	        overButton();
 	    }
 	 
-	 // interactive button behaviour
+	 // Change button color if pressed
 	 public void pressedButton() {
-		 if (pressed) { 
-			 currentColor = baseColor;
-		} else { 
-			currentColor = selectedColor;
-		}
+		if (pressed) { currentColor = baseColor; } 
+		else { currentColor = selectedColor; }
 	 }
 	 
+	 // Change button color if over
 	 public void overButton() {
-		 if (over) {
-			 currentColor = highlightColor; 
-		 } else {
-			
-			 if (pressed) {
-				 currentColor = baseColor;
-			 } else {
-				 currentColor = selectedColor;
-			 }
+		 if (over && !pressed) { currentColor = highlightColor; } 
+		 else {
+			 if (pressed) { currentColor = baseColor; } 
+			 else { currentColor = selectedColor; }
 		 }
 	 }
+	 
 }

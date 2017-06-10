@@ -129,24 +129,26 @@ public class AirportMap extends PApplet {
 	
 	@Override
 	public void mouseMoved() {
+		
+		// highlight button if over
 		if (mouseX > 10 && mouseX < 110 && mouseY > 10 && mouseY < 30) {
 			airportsButton.setOverButton(true);
-			
 		} else {
 			airportsButton.setOverButton(false);
-		
 		}
 		
-		System.out.println(routesButton.getOverButton());
 		if (mouseX > 120 && mouseX < 220 && mouseY > 10 && mouseY < 30) {
 			routesButton.setOverButton(true);
 		} else {
 			routesButton.setOverButton(false);
 		}
+		
 	}
 	
 	@Override
 	public void mouseClicked() {
+		
+		// highlight buttons if pressed
 		if (mouseX > 10 && mouseX < 110 && mouseY > 10 && mouseY < 30) {
 			if (airportsButton.getButtonPressed()) { 
 				airportsButton.setButtonPressed(false);
@@ -162,13 +164,14 @@ public class AirportMap extends PApplet {
 			routesButton.setButtonPressed(true);
 			}
 		}
+		
 	}
 	
 	// helper method for buttons setup
 	private void setupButtons() {
 		int bcolor = color(71, 145, 229);
 		int scolor = color(134, 187, 247);
-		int hcolor = color(233, 236, 237);
+		int hcolor = color(111, 153, 167);
 		
 		airportsButton = new RectButton(this, 400, 40);
 		airportsButton.setCoordinates(10, 10);
