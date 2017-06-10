@@ -12,7 +12,6 @@ import de.fhpotsdam.unfolding.data.PointFeature;
 import de.fhpotsdam.unfolding.data.ShapeFeature;
 import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.SimpleLinesMarker;
-import de.fhpotsdam.unfolding.marker.SimplePointMarker;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import de.fhpotsdam.unfolding.geo.Location;
 import parsing.ParseFeed;
@@ -37,6 +36,7 @@ public class AirportMap extends PApplet {
 	PGraphics pg;
 	
 	List<Marker> routeMarkers;
+	HashMap<Integer, Location> airports;
 	
 	private String cityFile = "city-data.json";
 	List<Feature> cities;
@@ -59,7 +59,7 @@ public class AirportMap extends PApplet {
 		
 		// list for markers, hashmap for quicker access when matching with routes
 		airportMarkers = new ArrayList<Marker>();
-		HashMap<Integer, Location> airports = new HashMap<Integer, Location>();
+		airports = new HashMap<Integer, Location>();
 		
 		// load image for the marker
 		// Icon credit: made by http://www.freepik.com loaded from http://www.flaticon.com
@@ -78,13 +78,16 @@ public class AirportMap extends PApplet {
 				// show marker only if it is nearby big city
 				checkCities(m);
 				airportMarkers.add(m);
+				//System.out.println(m.getProperties());
+			//	System.out.println(m.getLocation());
 			}
-			
+		
 			// put airport in hashmap with OpenFlights unique id for key
 			airports.put(Integer.parseInt(feature.getId()), feature.getLocation());
-
+			//System.out.println(feature.getId());
+			//System.out.println(feature.getLocation());
 		}
-		
+		 
 		// parse route data
 		List<ShapeFeature> routes = ParseFeed.parseRoutes(this, "routes.dat");
 		routeMarkers = new ArrayList<Marker>();
@@ -109,6 +112,7 @@ public class AirportMap extends PApplet {
 			//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
 			routeMarkers.add(rt);
 		}
+		
 		
 		
 		//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
@@ -176,24 +180,40 @@ public class AirportMap extends PApplet {
 		if (lastSelected != null) {
 			lastSelected.setSelected(false);
 			lastSelected = null;
-		} else {
-			selectMarkerIfClicked();
+		}
+		selectMarkerIfClicked();
+		
+	}
+	
+	// helper method for selecting marker if airport marker is clicked
+	private void selectMarkerIfClicked() {
+		for (Marker m : airportMarkers) {
+			if (m.isInside(map, mouseX, mouseY) && !m.isHidden()) {
+				lastSelected = m;
+				lastSelected.setSelected(true);
+				showRoutes(m);
+				return;
+			}
 		}
 	}
 	
-	// helper method for selecting marker if mouse is over it
-		public void selectMarkerIfClicked() {
-			for (Marker m : airportMarkers) {
-				if (m.isInside(map, mouseX, mouseY) && !m.isHidden()) {
-					lastSelected = m;
-					lastSelected.setSelected(true);
-					System.out.println("Selected");
-					System.out.println(lastSelected.getProperty("name"));
-					System.out.println(lastSelected.isSelected());
-					return;
-				}
+	// helper method for showing routes if airport marker is clicked
+	private void showRoutes(Marker m) {
+		System.out.println("Start searching routes");
+		for (Marker route : routeMarkers) {
+			//System.out.println("Checking routes");
+			//System.out.println(m.getLocation());
+			int source = Integer.parseInt(route.getProperty("source").toString());
+			//System.out.println(airports.get(source));
+			if (m.getLocation().equals(airports.get(source))) {
+				System.out.println("Route found");
+				route.setHidden(false);
 			}
 		}
+		
+	}
+	
+	
 	
 	// helper method for buttons setup
 	private void setupButtons() {
