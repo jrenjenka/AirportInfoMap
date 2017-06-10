@@ -33,7 +33,9 @@ public class AirportMap extends PApplet {
 	UnfoldingMap map;
 	
 	private List<Marker> airportMarkers;
+	private Marker lastSelected;
 	PGraphics pg;
+	
 	List<Marker> routeMarkers;
 	
 	private String cityFile = "city-data.json";
@@ -41,6 +43,7 @@ public class AirportMap extends PApplet {
 	
 	RectButton airportsButton;
 	RectButton routesButton;
+	
 	
 	public void setup() {
 		// setting up PAppler
@@ -67,12 +70,15 @@ public class AirportMap extends PApplet {
 		// create markers from features
 		for(PointFeature feature : features) {
 			AirportMarker m = new AirportMarker(feature, icon);
-			
-			// show marker only if it is nearby big city
-			checkCities(m);
+		
+			String name = m.getProperty("name").toString().replaceAll("^\"|\"$", "");
 			
 			// add marker to list of markers
-			airportMarkers.add(m);
+			if (!name.equals("All Airports")) {
+				// show marker only if it is nearby big city
+				checkCities(m);
+				airportMarkers.add(m);
+			}
 			
 			// put airport in hashmap with OpenFlights unique id for key
 			airports.put(Integer.parseInt(feature.getId()), feature.getLocation());
@@ -140,7 +146,6 @@ public class AirportMap extends PApplet {
 		} else {
 			routesButton.setOverButton(false);
 		}
-		
 	}
 	
 	@Override
@@ -168,7 +173,27 @@ public class AirportMap extends PApplet {
 			}
 		}
 		
+		if (lastSelected != null) {
+			lastSelected.setSelected(false);
+			lastSelected = null;
+		} else {
+			selectMarkerIfClicked();
+		}
 	}
+	
+	// helper method for selecting marker if mouse is over it
+		public void selectMarkerIfClicked() {
+			for (Marker m : airportMarkers) {
+				if (m.isInside(map, mouseX, mouseY) && !m.isHidden()) {
+					lastSelected = m;
+					lastSelected.setSelected(true);
+					System.out.println("Selected");
+					System.out.println(lastSelected.getProperty("name"));
+					System.out.println(lastSelected.isSelected());
+					return;
+				}
+			}
+		}
 	
 	// helper method for buttons setup
 	private void setupButtons() {
