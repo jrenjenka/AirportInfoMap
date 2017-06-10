@@ -44,13 +44,15 @@ public class AirportMap extends PApplet {
 	RectButton airportsButton;
 	RectButton routesButton;
 	
+	String title;
+	String location;
 	
 	public void setup() {
 		// setting up PAppler
 		size(900, 700, OPENGL);
 		
 		// setting up map and default events
-		map = new UnfoldingMap(this, 0, 0, 900, 900);
+		map = new UnfoldingMap(this, 0, 0, 900, 800);
 		MapUtils.createDefaultEventDispatcher(this, map);
 		
 		// get features from airport data
@@ -119,6 +121,7 @@ public class AirportMap extends PApplet {
 
 		background(0);
 		map.draw();
+		addInfo();
 		airportsButton.display();
 		routesButton.display();
 		
@@ -181,6 +184,8 @@ public class AirportMap extends PApplet {
 				lastSelected = m;
 				lastSelected.setSelected(true);
 				showRoutes(m);
+				title = getTitle(m);
+				location = getLoc(m);
 				return;
 			}
 		}
@@ -277,4 +282,38 @@ public class AirportMap extends PApplet {
 		routesButton.setLabel("Show all routes", 10, 70);
 			
 	}
+	
+	// helper method for showing information about marker if it is clicked
+	private void addInfo() {
+		int textSize = 10;
+		int x = 600;
+		int y = 10;
+		int width = 270;
+		int height = 50;
+		
+		fill(250, 250, 250);
+		rect(x, y, width, height, 7);
+		
+		if (title != null) {
+			// show marker info
+			fill(0);
+			textSize(textSize);
+			textAlign(LEFT, TOP);
+		
+			text(title, x + 10, y + 10);
+			text("Location: " + location, x + 10, y + 25);
+		}
+		
+	}
+	
+	private String getTitle(Marker airport) {
+		AirportMarker m = (AirportMarker) airport;
+		return m.getName() + ", " + m.getCode() 
+				+ ". "+ m.getCity() + ", " + m.getCountry();
+	}
+	
+	private String getLoc(Marker airport) {
+		return airport.getLocation().toString();
+	}
+
 }

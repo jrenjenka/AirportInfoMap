@@ -50,7 +50,7 @@ public class AirportMarker extends CommonMarker {
 		
 		pg.pushStyle();
 		pg.stroke(110);
-		pg.fill(255,255,255);
+		pg.fill(250,250,250);
 		pg.rect(x - width/2, y - height - 10, width, height, 5);
 		
 		pg.textAlign(PConstants.CENTER, PConstants.CENTER);
@@ -62,19 +62,19 @@ public class AirportMarker extends CommonMarker {
 		
 	}
 	
-	private String getName() {
+	public String getName() {
 		return getProperty("name").toString().replaceAll("^\"|\"$", "");
 	}
 	
-	private String getCode() {
+	public String getCode() {
 		return getProperty("code").toString().replaceAll("^\"|\"$", "");
 	}
 	
-	private String getCountry() {
+	public String getCountry() {
 		return getProperty("country").toString().replaceAll("^\"|\"$", "");
 	}
 	
-	private String getCity() {
+	public String getCity() {
 		return getProperty("city").toString().replaceAll("^\"|\"$", "");
 	}
  }
