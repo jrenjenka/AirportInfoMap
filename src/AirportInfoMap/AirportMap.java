@@ -63,6 +63,7 @@ public class AirportMap extends PApplet {
 		// create markers from features
 		for(PointFeature feature : features) {
 			AirportMarker m = new AirportMarker(feature, icon);
+			m.setHidden(true);
 			String airportCode = m.getProperty("code").toString();
 			String city = m.getProperty("city").toString();
 			
@@ -72,29 +73,15 @@ public class AirportMap extends PApplet {
 			for (Feature c : cities) {
 				String name = c.getProperty("name").toString();
 				if(city.equals(name)) {
-					airportList.add(m);
-					
-					// put airport in hashmap with OpenFlights unique id for key
-					airports.put(Integer.parseInt(feature.getId()), feature.getLocation());
+					m.setHidden(false);
 				}
-			}
+			} 
 			
-			/*
-			if(!airportCode.equals("\"\"")) 
-			{
-				m.setRadius(5);
-				airportList.add(m);
-				
-				// https://stackoverflow.com/a/2608682
-				airportCode = airportCode.replaceAll("^\"|\"$", "");
-				
+			airportList.add(m);
 			
-				// put airport in hashmap with OpenFlights unique id for key
-				airports.put(Integer.parseInt(feature.getId()), feature.getLocation());
-			}
-			*/
-			
-		
+			// put airport in hashmap with OpenFlights unique id for key
+			airports.put(Integer.parseInt(feature.getId()), feature.getLocation());
+
 		}
 		
 		// parse route data
